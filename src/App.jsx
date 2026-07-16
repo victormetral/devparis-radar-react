@@ -1,122 +1,136 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+import { useEffect, useState } from "react"
+import Card from "./Card.jsx"
+import Hero from "./Hero.jsx"
+import Filters from "./Filters.jsx"
+import CategoryFilters from "./CategoryFilters.jsx"
+import { categories } from "./categories.js"
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [donnees, setDonnees] = useState([])
+  const [recherche, setRecherche] = useState("")
+  const [communeSelectionnee, setCommuneSelectionnee] = useState("Toutes")
+  const [etatSelectionne, setEtatSelectionne] = useState("Tous")
+  const [categorieSelectionnee, setCategorieSelectionnee] = useState("Tous")
+
+  const chargerDonnees = async () => {
+    try {
+
+      const limit = 100
+      let offset = 0
+      let total = Infinity
+      let tousLesResultats = []
+
+      while (offset < total) {
+
+      const reponse = await fetch(
+        `https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/arc_innovation/records?limit=${limit}&offset=${offset}`
+      )
+
+      const resultat = await reponse.json()
+      tousLesResultats = [
+        ...tousLesResultats,
+        ...resultat.results
+      ]
+      total = resultat.total_count
+      offset += limit
+    
+      }
+      
+      setDonnees(tousLesResultats)
+
+    } catch (erreur) {
+      console.error("Erreur de chargement :", erreur.message)
+    }
+  }
+
+  useEffect(() => {
+    chargerDonnees()
+  }, [])
+
+  const communes = [...new Set(donnees.map((item) => item.commune))].filter(Boolean).sort()
+  const etats = [...new Set(donnees.map((item) => item.etat))].filter(Boolean).sort()
+  const categorieActive = categories.find((categorie) => categorie.label === categorieSelectionnee)
+
+  const donneesFiltrees = donnees.filter((item) => {
+  
+    const texteRecherche = recherche.toLowerCase()
+
+  const correspondRecherche =
+    item.nom?.toLowerCase().includes(texteRecherche) ||
+    item.commune?.toLowerCase().includes(texteRecherche) ||
+    item.typologie?.toLowerCase().includes(texteRecherche) ||
+    item.type_innovation?.toLowerCase().includes(texteRecherche) ||
+    item.texte_descriptif?.toLowerCase().includes(texteRecherche)
+  
+  const correspondCommune = 
+    communeSelectionnee ==="Toutes" ||
+    item.commune === communeSelectionnee
+
+  const correspondEtat =
+    etatSelectionne === "Tous" ||
+    item.etat === etatSelectionne
+
+    const texteLieu = [
+        item.nom,
+        item.adresse,
+        item.commune,
+        item.etat,
+        item.typologie,
+        item.type_innovation,
+        item.texte_descriptif,
+        item.site_internet,
+
+    ]
+        .filter(Boolean).join(" ").toLowerCase()
+
+  const correspondCategorie =
+    categorieSelectionnee === "Tous" ||
+    categorieActive?.motsCles.some((motsCle) => texteLieu.includes(motsCle))
+
+  return correspondRecherche && correspondCommune && correspondEtat && correspondCategorie
+
+})
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
+  <>
+    <Hero />
+
+    <main className="app-layout">
+      <section className="app-content">
+        <Filters
+          recherche={recherche}
+          setRecherche={setRecherche}
+          communeSelectionnee={communeSelectionnee}
+          setCommuneSelectionnee={setCommuneSelectionnee}
+          communes={communes}
+          etatSelectionne={etatSelectionne}
+          setEtatSelectionne={setEtatSelectionne}
+          etats={etats}
+          setCategorieSelectionnee={setCategorieSelectionnee}
+        />
+
+        <CategoryFilters
+          categorieSelectionnee={categorieSelectionnee}
+          setCategorieSelectionnee={setCategorieSelectionnee}
+        />
+
+        <p>{donneesFiltrees.length} résultats</p>
+
+        {donneesFiltrees.length === 0 ? (
+          <p className="empty-message">
+            Aucun lieu ne correspond à votre recherche.
           </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
+        ) : (
+          <section id="places-container">
+            {donneesFiltrees.map((item, index) => (
+              <Card item={item} key={index} />
+            ))}
+          </section>
+        )}
       </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+    </main>
+  </>
+)
 }
 
 export default App
