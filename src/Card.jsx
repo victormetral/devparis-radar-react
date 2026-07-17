@@ -1,6 +1,10 @@
-const Card = ({ item }) => {
+const Card = ({ item, setLieuSelectionne, estSelectionne }) => {
   return (
-    <article className="place-card">
+    <article className={
+      estSelectionne
+      ? "place-card is-active"
+      : "place-card"
+    }>
       <div className="place-card__content">
         <span className="place-card__status">{item.etat}</span>
 
@@ -56,7 +60,16 @@ const Card = ({ item }) => {
             Téléphone
           </a>
         )}
-      </div>
+
+        <button
+        type="button"
+        className="place-card__link"
+        onClick={() => setLieuSelectionne(item)}
+        >
+          Voir sur la carte
+        </button>
+
+      </div> 
     </article>
   )
 }
