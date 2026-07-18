@@ -1,0 +1,30 @@
+.map-panel {
+  position: sticky;
+  top: var(--space-xl);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-card);
+  scroll-margin-top: var(--space-xl);
+}
+
+.map-panel__header {
+  padding: var(--space-lg);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.map-panel__header h2 {
+  margin: 0 0 var(--space-sm);
+}
+
+.map-panel__header p {
+  margin: 0;
+  color: var(--color-muted);
+  line-height: 1.5;
+}
+
+#map {
+  height: 620px;
+  background-color: var(--color-map-bg);
+}

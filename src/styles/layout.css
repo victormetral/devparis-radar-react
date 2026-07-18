@@ -1,0 +1,18 @@
+.app-layout {
+  display: grid;
+  grid-template-columns:
+    minmax(0, 1fr)
+    420px;
+  gap: var(--space-xl);
+  align-items: start;
+  max-width: var(--container-max-width);
+  margin: 0 auto;
+  padding:
+    0
+    var(--space-xl)
+    var(--space-2xl);
+}
+
+.app-content {
+  min-width: 0;
+}
