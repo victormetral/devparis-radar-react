@@ -1,4 +1,4 @@
-import { categories } from "./categories.js"
+import { categories } from "../data/categories.js"
 
 const CategoryFilters = ({
   categorieSelectionnee,
