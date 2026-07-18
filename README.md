@@ -4,6 +4,12 @@ DevParis Radar est une application React qui permet d’explorer des lieux liés
 
 Les données proviennent de l’API OpenData Paris et sont affichées sous forme de cartes ainsi que sur une carte interactive Leaflet.
 
+## Application en ligne
+
+L’application est accessible ici :
+
+[Voir DevParis Radar](https://devparis-radar-react.netlify.app)
+
 ## Fonctionnalités
 
 - Recherche par nom, adresse, commune, typologie ou description
@@ -24,21 +30,23 @@ Les données proviennent de l’API OpenData Paris et sont affichées sous forme
 - Leaflet
 - OpenStreetMap
 - OpenData Paris
+- Vitest
 - CSS responsive
 - ESLint
+- Netlify
 
 ## Installation
 
 Clone le dépôt :
 
 ```bash
-git clone https://github.com/adatechschool/adataviz-react-victormetral.git
+git clone https://github.com/victormetral/devparis-radar-react.git
 ```
 
 Entre dans le dossier :
 
 ```bash
-cd adataviz-react-victormetral
+cd devparis-radar-react
 ```
 
 Installe les dépendances :
@@ -61,6 +69,24 @@ npm run dev
 npm run dev
 ```
 
+### Lancer les tests
+
+```bash
+npm test
+```
+
+### Lancer les tests en mode surveillance
+
+```bash
+npm run test:watch
+```
+
+### Vérifier le code avec ESLint
+
+```bash
+npm run lint
+```
+
 ### Créer la version optimisée
 
 ```bash
@@ -75,10 +101,35 @@ Le projet construit est placé dans le dossier `dist`.
 npm run preview
 ```
 
-### Vérifier le code avec ESLint
+## Tests
+
+Les tests sont réalisés avec Vitest.
+
+Ils vérifient les fonctions principales de traitement des données.
+
+### `preparerAffichageLieux.test.js`
+
+- extraction des valeurs uniques ;
+- suppression des valeurs vides ;
+- pagination ;
+- gestion d’une liste vide.
+
+### `formaterLieu.test.js`
+
+- transformation d’une donnée brute de l’API ;
+- création des coordonnées ;
+- utilisation des valeurs par défaut.
+
+### `filtrerLieux.test.js`
+
+- recherche textuelle ;
+- filtre par commune et état ;
+- filtre par catégorie.
+
+Pour lancer tous les tests :
 
 ```bash
-npm run lint
+npm test
 ```
 
 ## Structure du projet
@@ -113,6 +164,10 @@ src/
 │   ├── results.css
 │   └── variables.css
 ├── utils/
+│   ├── tests/
+│   │   ├── filtrerLieux.test.js
+│   │   ├── formaterLieu.test.js
+│   │   └── preparerAffichageLieux.test.js
 │   ├── determinerCategorieLieu.js
 │   ├── filtrerLieux.js
 │   ├── filtrerLieuxExploitables.js
@@ -161,6 +216,13 @@ L’application utilise notamment :
 - `role="alert"`
 
 Ces attributs améliorent l’utilisation de l’application avec un lecteur d’écran et lors de la navigation au clavier.
+
+## Déploiement
+
+L’application est construite avec Vite et déployée sur Netlify.
+
+- Commande de build : `npm run build`
+- Dossier publié : `dist`
 
 ## Auteur
 
