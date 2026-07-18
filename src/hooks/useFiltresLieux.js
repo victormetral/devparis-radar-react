@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
 import { determinerCategorieLieu } from "../utils/determinerCategorieLieu.js"
 import { filtrerLieux } from "../utils/filtrerLieux.js"
@@ -12,22 +12,24 @@ export const useFiltresLieux = ({
   donnees,
   lieuxParPage,
 }) => {
-  const [recherche, setRecherche] =
-    useState("")
+  const [
+    recherche,
+    setRechercheInterne,
+  ] = useState("")
 
   const [
     communeSelectionnee,
-    setCommuneSelectionnee,
+    setCommuneSelectionneeInterne,
   ] = useState("Toutes")
 
   const [
     etatSelectionne,
-    setEtatSelectionne,
+    setEtatSelectionneInterne,
   ] = useState("Tous")
 
   const [
     categorieSelectionnee,
-    setCategorieSelectionnee,
+    setCategorieSelectionneeInterne,
   ] = useState("Tous")
 
   const [
@@ -35,14 +37,41 @@ export const useFiltresLieux = ({
     setPageActuelle,
   ] = useState(1)
 
-  useEffect(() => {
+  const setRecherche = (
+    nouvelleRecherche
+  ) => {
+    setRechercheInterne(
+      nouvelleRecherche
+    )
     setPageActuelle(1)
-  }, [
-    recherche,
-    communeSelectionnee,
-    etatSelectionne,
-    categorieSelectionnee,
-  ])
+  }
+
+  const setCommuneSelectionnee = (
+    nouvelleCommune
+  ) => {
+    setCommuneSelectionneeInterne(
+      nouvelleCommune
+    )
+    setPageActuelle(1)
+  }
+
+  const setEtatSelectionne = (
+    nouvelEtat
+  ) => {
+    setEtatSelectionneInterne(
+      nouvelEtat
+    )
+    setPageActuelle(1)
+  }
+
+  const setCategorieSelectionnee = (
+    nouvelleCategorie
+  ) => {
+    setCategorieSelectionneeInterne(
+      nouvelleCategorie
+    )
+    setPageActuelle(1)
+  }
 
   const communes =
     extraireValeursUniques(

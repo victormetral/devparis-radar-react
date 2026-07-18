@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useState } from "react"
 
 import CategoryFilters from "./components/CategoryFilters.jsx"
 import Filters from "./components/Filters.jsx"
@@ -51,24 +51,11 @@ function App() {
     lieuxParPage,
   })
 
-  useEffect(() => {
-    if (!lieuSelectionne) {
-      return
-    }
-
-    const lieuEstEncoreVisible =
-      donneesFiltrees.some(
-        (lieu) =>
-          lieu.id === lieuSelectionne.id
-      )
-
-    if (!lieuEstEncoreVisible) {
-      setLieuSelectionne(null)
-    }
-  }, [
-    donneesFiltrees,
-    lieuSelectionne,
-  ])
+  const lieuSelectionneVisible =
+    donneesFiltrees.find(
+      (lieu) =>
+        lieu.id === lieuSelectionne?.id
+    ) || null
 
   return (
     <>
@@ -127,7 +114,7 @@ function App() {
               setPageActuelle
             }
             lieuSelectionne={
-              lieuSelectionne
+              lieuSelectionneVisible
             }
             setLieuSelectionne={
               setLieuSelectionne
@@ -138,7 +125,7 @@ function App() {
         <Map
           lieux={donneesFiltrees}
           lieuSelectionne={
-            lieuSelectionne
+            lieuSelectionneVisible
           }
         />
       </main>

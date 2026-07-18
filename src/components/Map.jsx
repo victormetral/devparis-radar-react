@@ -46,6 +46,8 @@ const Map = ({
       return
     }
 
+    const markers = markersRef.current
+
     mapRef.current = L.map(
       mapContainerRef.current
     ).setView(
@@ -72,7 +74,7 @@ const Map = ({
       mapRef.current?.remove()
       mapRef.current = null
       markerLayerRef.current = null
-      markersRef.current.clear()
+      markers.clear()
     }
   }, [])
 
