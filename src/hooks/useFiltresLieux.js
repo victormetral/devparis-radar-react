@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 
+import { determinerCategorieLieu } from "../utils/determinerCategorieLieu.js"
 import { filtrerLieux } from "../utils/filtrerLieux.js"
 
 import {
@@ -55,6 +56,32 @@ export const useFiltresLieux = ({
       "etat"
     )
 
+  const donneesSansFiltreCategorie =
+    filtrerLieux({
+      lieux: donnees,
+      recherche,
+      communeSelectionnee,
+      etatSelectionne,
+      categorieSelectionnee: "Tous",
+    })
+
+  const compteCategories =
+    donneesSansFiltreCategorie.reduce(
+      (compteurs, lieu) => {
+        const categorie =
+          determinerCategorieLieu(lieu)
+
+        compteurs[categorie] =
+          (compteurs[categorie] || 0) + 1
+
+        return compteurs
+      },
+      {
+        Tous:
+          donneesSansFiltreCategorie.length,
+      }
+    )
+
   const donneesFiltrees =
     filtrerLieux({
       lieux: donnees,
@@ -94,5 +121,6 @@ export const useFiltresLieux = ({
     donneesFiltrees,
     donneesPaginees,
     nombrePages,
+    compteCategories,
   }
 }

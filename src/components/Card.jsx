@@ -3,12 +3,19 @@ const Card = ({
   setLieuSelectionne,
   estSelectionne,
 }) => {
+  const selectionnerLieu = () => {
+    setLieuSelectionne(item)
+  }
+
   return (
     <article
       className={
         estSelectionne
           ? "place-card is-active"
           : "place-card"
+      }
+      aria-current={
+        estSelectionne ? "true" : undefined
       }
     >
       <div className="place-card__content">
@@ -54,6 +61,7 @@ const Card = ({
             href={item.siteInternet}
             target="_blank"
             rel="noreferrer"
+            aria-label={`Voir le site de ${item.nom}`}
           >
             Voir le site
           </a>
@@ -63,6 +71,7 @@ const Card = ({
           <a
             className="place-card__link place-card__link--secondary"
             href={`mailto:${item.email}`}
+            aria-label={`Envoyer un email à ${item.nom}`}
           >
             Email
           </a>
@@ -72,6 +81,7 @@ const Card = ({
           <a
             className="place-card__link place-card__link--secondary"
             href={`tel:${item.telephone}`}
+            aria-label={`Téléphoner à ${item.nom}`}
           >
             Téléphone
           </a>
@@ -81,11 +91,12 @@ const Card = ({
           <button
             type="button"
             className="place-card__link place-card__link--map"
-            onClick={() =>
-              setLieuSelectionne(item)
-            }
+            aria-pressed={estSelectionne}
+            onClick={selectionnerLieu}
           >
-            Voir sur la carte
+            {estSelectionne
+              ? "Lieu affiché sur la carte"
+              : "Voir sur la carte"}
           </button>
         )}
       </div>

@@ -39,7 +39,10 @@ const Map = ({
   const mapPanelRef = useRef(null)
 
   useEffect(() => {
-    if (mapRef.current) {
+    if (
+      mapRef.current ||
+      !mapContainerRef.current
+    ) {
       return
     }
 
@@ -68,6 +71,8 @@ const Map = ({
     return () => {
       mapRef.current?.remove()
       mapRef.current = null
+      markerLayerRef.current = null
+      markersRef.current.clear()
     }
   }, [])
 
@@ -180,12 +185,15 @@ const Map = ({
     <section
       className="map-panel"
       ref={mapPanelRef}
+      aria-labelledby="map-title"
     >
       <header className="map-panel__header">
-        <h2>Carte interactive</h2>
+        <h2 id="map-title">
+          Carte interactive
+        </h2>
 
         <p>
-          Clique sur “Voir sur la carte”
+          Clique sur « Voir sur la carte »
           pour localiser un lieu.
         </p>
       </header>
@@ -193,6 +201,8 @@ const Map = ({
       <div
         id="map"
         ref={mapContainerRef}
+        role="region"
+        aria-label="Carte des lieux technologiques"
       ></div>
     </section>
   )

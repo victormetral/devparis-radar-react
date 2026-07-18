@@ -1,13 +1,18 @@
 const Hero = () => {
   return (
     <header className="site-header">
-      <section className="hero">
+      <section
+        className="hero"
+        aria-labelledby="hero-title"
+      >
         <div className="hero__content">
           <p className="hero__tagline">
             OpenData Paris · Tech · Innovation
           </p>
 
-          <h1>DevParis Radar</h1>
+          <h1 id="hero-title">
+            DevParis Radar
+          </h1>
 
           <p className="hero__description">
             Explore les lieux tech, fablabs, espaces d’innovation,
@@ -15,7 +20,10 @@ const Hero = () => {
           </p>
         </div>
 
-        <div className="hero__visual" aria-hidden="true">
+        <div
+          className="hero__visual"
+          aria-hidden="true"
+        >
           <div className="hero__card hero__card--primary">
             <span>API</span>
             <strong>OpenData Paris</strong>

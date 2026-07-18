@@ -4,18 +4,26 @@ const ResultsHeader = ({
   nombrePages,
   lieuxParPage,
 }) => {
-  return (
-    <header className="results-header">
-      <div>
-        <p className="results-header__eyebrow">
-          Résultats filtrés
-        </p>
+  const texteResultats =
+    nombreResultats > 1
+      ? `${nombreResultats} lieux trouvés`
+      : `${nombreResultats} lieu trouvé`
 
-        <h2>{nombreResultats} lieux trouvés</h2>
-      </div>
+  return (
+    <header
+      className="results-header"
+      aria-live="polite"
+    >
+      <p className="results-header__eyebrow">
+        Résultats filtrés
+      </p>
+
+      <h2>{texteResultats}</h2>
 
       <p className="results-header__meta">
-        Page {pageActuelle} sur {nombrePages} · {lieuxParPage} lieux par page
+        Page {pageActuelle} sur {nombrePages}
+        {" · "}
+        {lieuxParPage} lieux par page
       </p>
     </header>
   )

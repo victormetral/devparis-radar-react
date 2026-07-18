@@ -1,14 +1,35 @@
-import { useEffect, useState } from "react"
+import {
+  useCallback,
+  useEffect,
+  useState,
+} from "react"
 
 import { chargerLieux } from "../services/lieuxApi.js"
 
 export const useLieux = () => {
-  const [donnees, setDonnees] = useState([])
-  const [chargement, setChargement] = useState(true)
-  const [erreur, setErreur] = useState("")
+  const [donnees, setDonnees] =
+    useState([])
+
+  const [chargement, setChargement] =
+    useState(true)
+
+  const [erreur, setErreur] =
+    useState("")
+
+  const [
+    numeroChargement,
+    setNumeroChargement,
+  ] = useState(0)
+
+  const recharger = useCallback(() => {
+    setNumeroChargement(
+      (ancienNumero) => ancienNumero + 1
+    )
+  }, [])
 
   useEffect(() => {
-    const controller = new AbortController()
+    const controller =
+      new AbortController()
 
     const chargerDonnees = async () => {
       try {
@@ -22,7 +43,8 @@ export const useLieux = () => {
         setDonnees(lieux)
       } catch (erreurRecue) {
         if (
-          erreurRecue.name === "AbortError"
+          erreurRecue.name ===
+          "AbortError"
         ) {
           return
         }
@@ -36,7 +58,9 @@ export const useLieux = () => {
           erreurRecue.message
         )
       } finally {
-        setChargement(false)
+        if (!controller.signal.aborted) {
+          setChargement(false)
+        }
       }
     }
 
@@ -45,11 +69,12 @@ export const useLieux = () => {
     return () => {
       controller.abort()
     }
-  }, [])
+  }, [numeroChargement])
 
   return {
     donnees,
     chargement,
     erreur,
+    recharger,
   }
 }

@@ -1,6 +1,6 @@
-import { formaterLieu } from "../utils/formaterLieu.js"
-import { filtrerLieuxTech } from "../utils/filtrerLieuxTech.js"
 import { filtrerLieuxExploitables } from "../utils/filtrerLieuxExploitables.js"
+import { filtrerLieuxTech } from "../utils/filtrerLieuxTech.js"
+import { formaterLieu } from "../utils/formaterLieu.js"
 
 const API_URL =
   "https://opendata.paris.fr/api/explore/v2.1/catalog/datasets/arc_innovation/records"

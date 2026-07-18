@@ -1,3 +1,44 @@
+const creerElementsPagination = (
+  pageActuelle,
+  nombrePages
+) => {
+  const elements = []
+
+  for (
+    let numeroPage = 1;
+    numeroPage <= nombrePages;
+    numeroPage += 1
+  ) {
+    const estPremierePage =
+      numeroPage === 1
+
+    const estDernierePage =
+      numeroPage === nombrePages
+
+    const estProcheDeLaPageActuelle =
+      Math.abs(numeroPage - pageActuelle) <= 1
+
+    const doitEtreAffichee =
+      estPremierePage ||
+      estDernierePage ||
+      estProcheDeLaPageActuelle
+
+    if (doitEtreAffichee) {
+      elements.push(numeroPage)
+      continue
+    }
+
+    const dernierElement =
+      elements[elements.length - 1]
+
+    if (dernierElement !== "...") {
+      elements.push("...")
+    }
+  }
+
+  return elements
+}
+
 const Pagination = ({
   nombrePages,
   pageActuelle,
@@ -14,6 +55,12 @@ const Pagination = ({
       })
   }
 
+  const elementsPagination =
+    creerElementsPagination(
+      pageActuelle,
+      nombrePages
+    )
+
   return (
     <nav
       className="pagination"
@@ -23,6 +70,8 @@ const Pagination = ({
         type="button"
         className="pagination__button"
         disabled={pageActuelle === 1}
+        aria-label="Aller à la page précédente"
+        aria-controls="places-container"
         onClick={() =>
           allerALaPage(pageActuelle - 1)
         }
@@ -30,30 +79,41 @@ const Pagination = ({
         Précédent
       </button>
 
-      {Array.from(
-        { length: nombrePages },
-        (_, index) => {
-          const numeroPage = index + 1
+      {elementsPagination.map(
+        (element, index) => {
+          if (element === "...") {
+            return (
+              <span
+                key={`ellipsis-${index}`}
+                className="pagination__ellipsis"
+                aria-hidden="true"
+              >
+                …
+              </span>
+            )
+          }
 
           return (
             <button
-              key={numeroPage}
+              key={element}
               type="button"
-              onClick={() =>
-                allerALaPage(numeroPage)
-              }
               className={
-                pageActuelle === numeroPage
+                pageActuelle === element
                   ? "pagination__button is-active"
                   : "pagination__button"
               }
               aria-current={
-                pageActuelle === numeroPage
+                pageActuelle === element
                   ? "page"
                   : undefined
               }
+              aria-label={`Aller à la page ${element}`}
+              aria-controls="places-container"
+              onClick={() =>
+                allerALaPage(element)
+              }
             >
-              {numeroPage}
+              {element}
             </button>
           )
         }
@@ -65,6 +125,8 @@ const Pagination = ({
         disabled={
           pageActuelle === nombrePages
         }
+        aria-label="Aller à la page suivante"
+        aria-controls="places-container"
         onClick={() =>
           allerALaPage(pageActuelle + 1)
         }

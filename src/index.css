@@ -413,6 +413,10 @@ select:focus-visible {
    Filtres rapides par catégorie
    =========================== */
 
+/* ===========================
+   Filtres rapides par catégorie
+   =========================== */
+
 .category-filters {
   display: flex;
   flex-wrap: wrap;
@@ -426,6 +430,9 @@ select:focus-visible {
 /* Permet aux catégories de passer sur plusieurs lignes. */
 
 .category-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
   padding: 10px 14px;
   border: 1px solid var(--color-border);
   border-radius: 999px;
@@ -452,7 +459,29 @@ select:focus-visible {
 
 /* Met en évidence la catégorie actuellement sélectionnée. */
 
+.category-button__count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 24px;
+  height: 24px;
+  padding: 0 7px;
+  border-radius: 999px;
+  background-color: var(--color-primary-soft);
+  color: var(--color-primary);
+  font-size: 12px;
+  font-weight: bold;
+}
 
+/* Affiche le nombre dans une petite pastille séparée. */
+
+.category-button.is-active
+.category-button__count {
+  background-color: white;
+  color: var(--color-primary);
+}
+
+/* Garde le compteur lisible dans le bouton actif. */
 /* ===========================
    En-tête des résultats
    =========================== */
@@ -726,21 +755,60 @@ select:focus-visible {
    =========================== */
 
 .empty-message {
+  display: grid;
   grid-column: 1 / -1;
-  padding: var(--space-lg);
+  justify-items: center;
+  gap: 16px;
+  padding: 32px;
   border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   background-color: var(--color-surface);
   color: var(--color-muted);
   text-align: center;
 }
 
-/* Affiche les messages de chargement, d’erreur ou d’absence de résultat. */
+.empty-message p {
+  margin: 0;
+}
 
+.empty-message button {
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 999px;
+  background-color: var(--color-primary);
+  color: white;
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.empty-message button:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.empty-message button:active {
+  transform: translateY(0);
+}
+
+.empty-message button:focus-visible {
+  outline: 3px solid rgba(43, 92, 255, 0.25);
+  outline-offset: 3px;
+}
 
 /* ===========================
    Pagination
    =========================== */
+
+.pagination__ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 42px;
+  color: var(--color-muted);
+  font-weight: bold;
+}
 
 .pagination {
   display: flex;

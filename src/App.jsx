@@ -1,12 +1,10 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
-import Card from "./components/Card.jsx"
 import CategoryFilters from "./components/CategoryFilters.jsx"
 import Filters from "./components/Filters.jsx"
 import Hero from "./components/Hero.jsx"
 import Map from "./components/Map.jsx"
-import Pagination from "./components/Pagination.jsx"
-import ResultsHeader from "./components/ResultsHeader.jsx"
+import ResultsSection from "./components/ResultsSection.jsx"
 
 import { useFiltresLieux } from "./hooks/useFiltresLieux.js"
 import { useLieux } from "./hooks/useLieux.js"
@@ -16,6 +14,7 @@ function App() {
     donnees,
     chargement,
     erreur,
+    recharger,
   } = useLieux()
 
   const [
@@ -46,10 +45,30 @@ function App() {
     donneesFiltrees,
     donneesPaginees,
     nombrePages,
+    compteCategories,
   } = useFiltresLieux({
     donnees,
     lieuxParPage,
   })
+
+  useEffect(() => {
+    if (!lieuSelectionne) {
+      return
+    }
+
+    const lieuEstEncoreVisible =
+      donneesFiltrees.some(
+        (lieu) =>
+          lieu.id === lieuSelectionne.id
+      )
+
+    if (!lieuEstEncoreVisible) {
+      setLieuSelectionne(null)
+    }
+  }, [
+    donneesFiltrees,
+    lieuSelectionne,
+  ])
 
   return (
     <>
@@ -86,72 +105,34 @@ function App() {
             setCategorieSelectionnee={
               setCategorieSelectionnee
             }
+            compteCategories={
+              compteCategories
+            }
           />
 
-          {chargement ? (
-            <p className="empty-message">
-              Chargement des lieux...
-            </p>
-          ) : erreur ? (
-            <p className="empty-message">
-              {erreur}
-            </p>
-          ) : (
-            <>
-              <ResultsHeader
-                nombreResultats={
-                  donneesFiltrees.length
-                }
-                pageActuelle={
-                  pageActuelle
-                }
-                nombrePages={
-                  nombrePages
-                }
-                lieuxParPage={
-                  lieuxParPage
-                }
-              />
-
-              {donneesFiltrees.length === 0 ? (
-                <p className="empty-message">
-                  Aucun lieu ne correspond à votre recherche.
-                </p>
-              ) : (
-                <>
-                  <section id="places-container">
-                    {donneesPaginees.map(
-                      (lieu) => (
-                        <Card
-                          key={lieu.id}
-                          item={lieu}
-                          setLieuSelectionne={
-                            setLieuSelectionne
-                          }
-                          estSelectionne={
-                            lieu.id ===
-                            lieuSelectionne?.id
-                          }
-                        />
-                      )
-                    )}
-                  </section>
-
-                  <Pagination
-                    nombrePages={
-                      nombrePages
-                    }
-                    pageActuelle={
-                      pageActuelle
-                    }
-                    setPageActuelle={
-                      setPageActuelle
-                    }
-                  />
-                </>
-              )}
-            </>
-          )}
+          <ResultsSection
+            chargement={chargement}
+            erreur={erreur}
+            recharger={recharger}
+            donneesFiltrees={
+              donneesFiltrees
+            }
+            donneesPaginees={
+              donneesPaginees
+            }
+            pageActuelle={pageActuelle}
+            nombrePages={nombrePages}
+            lieuxParPage={lieuxParPage}
+            setPageActuelle={
+              setPageActuelle
+            }
+            lieuSelectionne={
+              lieuSelectionne
+            }
+            setLieuSelectionne={
+              setLieuSelectionne
+            }
+          />
         </section>
 
         <Map
